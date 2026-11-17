@@ -1,0 +1,65 @@
+import java.util.Scanner;
+
+public class questao1 {
+
+    public static final int TAM_CONTAS = 50;
+    static Scanner teclado = new Scanner(System.in);
+
+    public static int cadastrarConta(Conta[] v, int tam) {
+        // 1. Verifica se o vetor está cheio
+        if (tam >= TAM_CONTAS) {
+            System.out.println("Erro: vetor de contas cheio. Não é possível cadastrar.");
+            return tam;
+        }
+
+        // 2. Lê os campos
+        System.out.print("ID: ");
+        int id = teclado.nextInt();
+        teclado.nextLine(); // consome o resto da linha
+
+        // 3. Verifica ID duplicado
+        for (int i = 0; i < tam; i++) {
+            if (v[i].id == id) {
+                System.out.println("Erro: já existe uma conta com o ID " + id + ".");
+                return tam;
+            }
+        }
+
+        System.out.print("Cliente: ");
+        String cliente = teclado.nextLine();
+
+        System.out.print("Saldo: ");
+        double saldo = teclado.nextDouble();
+
+        System.out.print("Limite: ");
+        double limite = teclado.nextDouble();
+
+        // 4. Verifica saldo e limite negativos
+        if (saldo < 0 || limite < 0) {
+            System.out.println("Erro: saldo e limite não podem ser negativos.");
+            return tam;
+        }
+
+        // 5. Cadastra a conta
+        Conta nova = new Conta();
+        nova.id = id;
+        nova.cliente = cliente;
+        nova.saldo = saldo;
+        nova.limite = limite;
+
+        v[tam] = nova;
+        System.out.println("Conta cadastrada com sucesso!");
+
+        return tam + 1;
+    }
+
+    public static void main(String[] args) {
+        Conta[] contas = new Conta[TAM_CONTAS];
+        int tam = 0;
+
+        tam = cadastrarConta(contas, tam);
+        tam = cadastrarConta(contas, tam);
+
+        System.out.println("Total de contas cadastradas: " + tam);
+    }
+}
