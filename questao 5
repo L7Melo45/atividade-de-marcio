@@ -1,0 +1,130 @@
+import java.util.Locale;
+import java.util.Scanner;
+
+public class questao5 {
+    public static final int TAM_OP = 1000;
+    static Scanner teclado = new Scanner(System.in);
+
+    public static void extrato(Conta[] vContas, int tamConta, Operacao[] vOp, int tamOp) {
+        System.out.print("Informe o ID da conta: ");
+        int id = teclado.nextInt();
+
+        // Localiza a conta no vetor de contas
+        Conta conta = null;
+        for (int i = 0; i < tamConta; i++) {
+            if (vContas[i].id == id) {
+                conta = vContas[i];
+                break;
+            }
+        }
+        if (conta == null) {
+            System.out.println("Conta " + id + " não encontrada.");
+            return;
+        }
+
+        // Usa a função da questão 4 para obter só as operações desta conta
+        Operacao[] vFiltrado = new Operacao[tamOp];
+        int n = filtraOperacoes(vOp, tamOp, vFiltrado, id);
+
+        int k = Math.min(5, n);   // quantidade de operações a exibir
+        int inicio = n - k;       // índice da primeira operação exibida
+
+        // Saldo inicial é zero. Soma as operações que não serão exibidas
+        // para que o "saldo anterior" da primeira linha esteja correto.
+        double saldo = 0;
+        for (int i = 0; i < inicio; i++) {
+            saldo += vFiltrado[i].valor;
+        }
+
+        System.out.println("========== EXTRATO ==========");
+        System.out.println("Conta: " + conta.id + " | Cliente: " + conta.cliente);
+        System.out.println("-----------------------------");
+        System.out.printf("%-6s %-5s %-16s %-16s %-16s%n",
+                "ID", "Tipo", "Valor", "Saldo anterior", "Saldo atual");
+
+        for (int i = inicio; i < n; i++) {
+            Operacao op = vFiltrado[i];
+            double saldoAnterior = saldo;
+            saldo += op.valor;
+
+            System.out.printf("%-6d %-5c %-16s %-16s %-16s%n",
+                    op.id, op.tipo, formataValor(op.valor),
+                    formataValor(saldoAnterior), formataValor(saldo));
+        }
+
+        if (n == 0) {
+            System.out.println("Nenhuma operação registrada.");
+        }
+
+        System.out.println("-----------------------------");
+        System.out.println("Saldo atual: " + formataValor(saldo));
+    }
+
+    // Exibe o valor sem sinal, seguido de C (positivo) ou D (negativo)
+    static String formataValor(double v) {
+        String sufixo = v < 0 ? "D" : "C";
+        return String.format(Locale.forLanguageTag("pt-BR"), "%.2f %s", Math.abs(v), sufixo);
+    }
+
+    public static int filtraOperacoes(Operacao[] vOp, int tamOp, Operacao[] vOpFiltrado, int x) {
+        int tamFiltrado = 0;
+        for (int i = 0; i < tamOp; i++) {
+            if (vOp[i].idConta == x && tamFiltrado < vOpFiltrado.length) {
+                vOpFiltrado[tamFiltrado] = vOp[i];
+                tamFiltrado++;
+            }
+        }
+        return tamFiltrado;
+    }
+
+    public static void main(String[] args) {
+        Conta[] contas = new Conta[100];
+        contas[0] = criaConta(10, "Ana", 0, 500);
+        int tamConta = 1;
+
+        Operacao[] vOp = new Operacao[TAM_OP];
+        int tamOp = 0;
+        vOp[tamOp++] = criaOperacao(1, 10, 'D', 200.0);
+        vOp[tamOp++] = criaOperacao(2, 10, 'S', -50.0);
+        vOp[tamOp++] = criaOperacao(3, 20, 'D', 300.0);
+        vOp[tamOp++] = criaOperacao(4, 10, 'T', -30.0);
+        vOp[tamOp++] = criaOperacao(5, 10, 'D', 100.0);
+        vOp[tamOp++] = criaOperacao(6, 10, 'S', -80.0);
+        vOp[tamOp++] = criaOperacao(7, 10, 'D', 40.0);
+        vOp[tamOp++] = criaOperacao(8, 10, 'S', -10.0);
+
+        extrato(contas, tamConta, vOp, tamOp);
+    }
+
+    static Conta criaConta(int id, String cliente, double saldo, double limite) {
+        Conta c = new Conta();
+        c.id = id;
+        c.cliente = cliente;
+        c.saldo = saldo;
+        c.limite = limite;
+        return c;
+    }
+
+    static Operacao criaOperacao(int id, int idConta, char tipo, double valor) {
+        Operacao op = new Operacao();
+        op.id = id;
+        op.idConta = idConta;
+        op.tipo = tipo;
+        op.valor = valor;
+        return op;
+    }
+}
+
+class Conta {
+    int id;
+    String cliente;
+    double saldo;
+    double limite;
+}
+
+class Operacao {
+    int id;
+    int idConta;
+    char tipo; // 'D', 'S' ou 'T'
+    double valor;
+}
