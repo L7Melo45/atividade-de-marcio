@@ -1,0 +1,55 @@
+public class questao4 {
+
+    public static final int TAM_OP = 1000;
+
+    public static int filtraOperacoes(Operacao[] vOp, int tamOp, Operacao[] vOpFiltrado, int x) {
+        int tamFiltrado = 0;
+
+        for (int i = 0; i < tamOp; i++) {
+            // Copia a operação se pertencer à conta x e ainda houver espaço no vetor de
+            // saída
+            if (vOp[i].idConta == x && tamFiltrado < vOpFiltrado.length) {
+                vOpFiltrado[tamFiltrado] = vOp[i];
+                tamFiltrado++;
+            }
+        }
+
+        return tamFiltrado;
+    }
+
+    public static void main(String[] args) {
+        Operacao[] vOp = new Operacao[TAM_OP];
+        Operacao[] vOpFiltrado = new Operacao[TAM_OP];
+
+        // Exemplo de dados
+        vOp[0] = criaOperacao(1, 10, 'D', 100.0);
+        vOp[1] = criaOperacao(2, 20, 'S', 50.0);
+        vOp[2] = criaOperacao(3, 10, 'T', 30.0);
+        vOp[3] = criaOperacao(4, 30, 'D', 80.0);
+        vOp[4] = criaOperacao(5, 10, 'S', 10.0);
+
+        int tamFiltrado = filtraOperacoes(vOp, 5, vOpFiltrado, 10);
+
+        System.out.println("Operações da conta 10: " + tamFiltrado);
+        for (int i = 0; i < tamFiltrado; i++) {
+            Operacao op = vOpFiltrado[i];
+            System.out.println("ID: " + op.id + " | Tipo: " + op.tipo + " | Valor: " + op.valor);
+        }
+    }
+
+    static Operacao criaOperacao(int id, int idConta, char tipo, double valor) {
+        Operacao op = new Operacao();
+        op.id = id;
+        op.idConta = idConta;
+        op.tipo = tipo;
+        op.valor = valor;
+        return op;
+    }
+}
+
+class Operacao {
+    int id;
+    int idConta;
+    char tipo; // 'D', 'S' ou 'T'
+    double valor;
+}
