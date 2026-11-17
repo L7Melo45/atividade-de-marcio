@@ -1,0 +1,25 @@
+public class Conta {
+    int id;
+    String cliente;
+    double saldo;
+    double limite;
+}
+
+public static int buscaBinariaCliente(Conta[] v, int tam, String x) {
+    int inicio = 0;
+    int fim = tam - 1;
+
+    while (inicio <= fim) {
+        int meio = (inicio + fim) / 2;
+        int cmp = v[meio].cliente.compareTo(x);
+
+        if (cmp == 0) {
+            return meio;          // encontrou o cliente
+        } else if (cmp < 0) {
+            inicio = meio + 1;    // nome do meio é menor: procura na metade direita
+        } else {
+            fim = meio - 1;       // nome do meio é maior: procura na metade esquerda
+        }
+    }
+    return -1;                    // não encontrou
+}
