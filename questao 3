@@ -1,0 +1,14 @@
+public class questao3 {
+    public static int insertionSortCliente(questao2[] v, int tam) {
+        for (int i = 1; i < tam; i+=1) {
+            questao2 atual = v[i];
+            int j = i - 1;
+            while (j >= 0 && v[j].cliente.compareTo(atual.cliente) > 0) {
+                v[j + 1] = v[j];
+                j-=1;
+            }
+            v[j + 1] = atual;
+        }
+        return tam;
+    }
+}
